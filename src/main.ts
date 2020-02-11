@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable func-style */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import compression from 'compression';

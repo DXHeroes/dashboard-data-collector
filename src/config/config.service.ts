@@ -1,12 +1,14 @@
+/* eslint-disable no-process-env */
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import { ConfigKeys } from './config.interface';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { GithubRecord } from '../model/githubRecord.entity';
 
 export class ConfigService {
   private readonly envConfig: { [key: string]: string };
 
-  constructor(filePath: string = process.env.NODE_ENV === "production" ? ".env" : ".env.development") {
+  constructor(filePath: string = process.env.NODE_ENV === 'production' ? '.env' : '.env.development') {
     this.envConfig = dotenv.parse(fs.readFileSync(filePath));
   }
 
@@ -14,23 +16,24 @@ export class ConfigService {
     return this.envConfig[key];
   }
 
-  public isProduction() {
-    return this.get(ConfigKeys.NODE_ENV) === "production";
+  isProduction() {
+    return this.get(ConfigKeys.NODE_ENV) === 'production';
   }
 
-  public getTypeOrmConfig(): TypeOrmModuleOptions {
+  getTypeOrmConfig(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
 
-      host: this.get(ConfigKeys.DB_HOST) || "localhost",
+      host: this.get(ConfigKeys.DB_HOST) || 'localhost',
       port: parseInt(this.get(ConfigKeys.DB_PORT)) || 5432,
-      username: this.get(ConfigKeys.DB_USER) || "postgres",
+      username: this.get(ConfigKeys.DB_USER) || 'postgres',
       password: this.get(ConfigKeys.DB_PASSWORD),
-      database: this.get(ConfigKeys.DB_NAME) || "dashboard_data_collector",
+      database: this.get(ConfigKeys.DB_NAME) || 'dashboard_data_collector',
 
-      entities: ['**/*.entity{.ts,.js}'],
+      entities: [GithubRecord],
 
       migrationsTableName: 'migration',
+      synchronize: true,
 
       migrations: ['src/migration/*.ts'],
 
