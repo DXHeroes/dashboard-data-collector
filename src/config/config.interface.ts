@@ -1,4 +1,8 @@
 export enum ConfigKeys {
-  GOOGLE_AUTH = 'GOOGLE_AUTH',
-  GOOGLE_SHEET_ID = 'GOOGLE_SHEET_ID',
+  DB_HOST = "DB_HOST",
+  DB_PORT = "DB_PORT",
+  DB_USER = "DB_USER",
+  DB_PASSWORD = "DB_PASSWORD",
+  DB_NAME = "DB_NAME",
+  NODE_ENV = "NODE_ENV",
 }
