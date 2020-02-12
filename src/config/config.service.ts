@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { ConfigKeys } from './config.interface';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { GithubRecord } from '../model/githubRecord.entity';
+import { GoogleAnalyticsRecord } from '../model/googleAnalyticsRecord.entity';
 
 export class ConfigService {
   private readonly envConfig: { [key: string]: string };
@@ -30,7 +31,7 @@ export class ConfigService {
       password: this.get(ConfigKeys.DB_PASSWORD),
       database: this.get(ConfigKeys.DB_NAME) || 'dashboard_data_collector',
 
-      entities: [GithubRecord],
+      entities: [GithubRecord, GoogleAnalyticsRecord],
 
       migrationsTableName: 'migration',
       synchronize: true,

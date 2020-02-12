@@ -18,7 +18,8 @@ export class GithubService {
     private readonly configService: ConfigService,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  // @TODO: temporary disable cron
+  // @Cron(CronExpression.EVERY_10_SECONDS)
   async githubRecordCron() {
     this.logger.debug('#githubRecordCron');
 
