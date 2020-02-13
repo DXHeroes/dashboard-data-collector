@@ -3,16 +3,15 @@ import { BaseEntity } from './base.entity';
 
 @Entity({ name: 'googleAnalyticsRecords' })
 export class GoogleAnalyticsRecord extends BaseEntity {
-  // @Column({ length: 300 })
-  // owner!: string;
-  // @Column({ length: 300 })
-  // name!: string;
-  // @Column('int')
-  // starsCount!: number;
-  // @Column('int')
-  // watchersCount!: number;
-  // @Column('int')
-  // forksCount!: number;
-  // @Column('int')
-  // openIssues!: number;
+  @Column({ length: 300 })
+  viewId!: string;
+
+  @Column('int')
+  usersCount!: number;
+
+  @Column('int')
+  newUsersCount!: number;
+
+  @Column('float')
+  bounceRate!: number;
 }

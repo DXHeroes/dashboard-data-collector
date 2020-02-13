@@ -19,7 +19,7 @@ export class GoogleAnalyticsService {
     private readonly configService: ConfigService,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_2_HOURS)
   async googleAnalyticsCron() {
     this.logger.debug('#googleAnalyticsCron');
 
@@ -32,6 +32,8 @@ export class GoogleAnalyticsService {
     const analyticsIds = this.configService.get(ConfigKeys.GOOGLE_ANALYTICS_IDS).split(',');
 
     for (const id of analyticsIds) {
+      // https://developers.google.com/analytics/devguides/reporting/core/v4/rest/v4/reports/batchGet#MetricType
+      // https://www.ovrdrv.com/blog/ultimate-google-analytics-dimensions-and-metrics-list/
       const response = await google.analyticsreporting({ version: 'v4', auth: client }).reports.batchGet({
         requestBody: {
           reportRequests: [
@@ -45,7 +47,13 @@ export class GoogleAnalyticsService {
               ],
               metrics: [
                 {
-                  expression: 'ga:sessions',
+                  expression: 'ga:users',
+                },
+                {
+                  expression: 'ga:newUsers',
+                },
+                {
+                  expression: 'ga:bounceRate',
                 },
               ],
             },
@@ -53,9 +61,19 @@ export class GoogleAnalyticsService {
         },
       });
 
-      // response.data.reports[0].data?.totals;
+      // this.logger.debug(response);
 
-      // await this.googleAnalyticsRepository.insert();
+      // get all values form the insane response
+      const usersCount = response.data.reports![0].data?.rows![0].metrics![0].values![0];
+      const newUsersCount = response.data.reports![0].data?.rows![0].metrics![0].values![1];
+      const bounceRate = response.data.reports![0].data?.rows![0].metrics![0].values![2];
+
+      await this.googleAnalyticsRepository.insert({
+        viewId: id,
+        usersCount: parseInt(usersCount),
+        newUsersCount: parseInt(newUsersCount),
+        bounceRate: parseFloat(bounceRate),
+      });
     }
 
     this.logger.debug(`googleAnalyticsRecords count: ${await this.googleAnalyticsRepository.count()}`);
